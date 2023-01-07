@@ -10,6 +10,7 @@ import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, optimism, arbitrum, polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import Navbar from '../components/Navbar';
 const { chains, provider } = configureChains(
   [polygonMumbai,goerli,polygon,mainnet],
   [
@@ -36,6 +37,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig client={wagmiClient}>
     <RainbowKitProvider chains={chains}>
       <main className={epilogue.className} >
+        <div className='absolute z-2' >
+      <Navbar/>
+        </div>
       <Component {...pageProps} />
       </main>
     </RainbowKitProvider>

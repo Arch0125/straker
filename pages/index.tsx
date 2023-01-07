@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter, Michroma,Epilogue } from '@next/font/google'
 import styles from '../styles/Home.module.css'
+import giftimg from '../assets/gift.png'
 
 
 export default function Home() {
@@ -15,8 +16,12 @@ export default function Home() {
       </Head>
       <div className='flex flex-row w-screen h-screen bg-bgcolor' >
         <div className='flex flex-col h-screen w-1/2 justify-center items-start pl-[10%] ' >
-          <p className={'text-[4vmax] text-secondary font-bold'} >Realtime Rewards</p>
-          <p className='text-[4vmax] text-primary font-bold' >for staked Assets</p>
+          <p className={'text-[4vmax] text-secondary font-bold'} >Realtime Rewards for staked assets.</p>
+          <p className={'text-[1.2vmax] text-secondary font-thin '} >Get staking rewards directly streamed to your wallet per second</p>
+          <button className='bg-primary text-white px-4 py-2 text-[1vmax] font-bold rounded-lg mt-5' >Launch App</button>
+        </div>
+        <div className='flex flex-col h-screen w-1/2 justify-center items-center' >
+          <Image src={giftimg} width={500} height={500} alt={''} />
         </div>
       </div>
     </>
