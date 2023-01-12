@@ -1,16 +1,21 @@
 import * as React from 'react';
+import GetBalance from '../hooks/GetBalance';
 
 interface IStakelistProps {
+    balance: string;
 }
 
 const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
+
+    const balance = GetBalance();
+
   return(
     <div className='flex flex-col w-screen h-screen bg-bgcolor items-center justify-center text-black pl-[10%] ' >
        <div className="stats stats-vertical lg:stats-horizontal shadow text-primary">
   
             <div className="stat">
                 <div className="stat-title">Total Stakers</div>
-                <div className="stat-value">31K</div>
+                <div className="stat-value"></div>
                 <div className="stat-desc">Jan 1st - Feb 1st</div>
             </div>
             
@@ -41,7 +46,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
   
             <div className="stat place-items-left">
                 <div className="stat-title">Available to Stake</div>
-                <div className="stat-value">31K</div>
+                <div className="stat-value">{balance?.slice(0,4)}</div>
                 <div className="stat-desc">fETH</div>
             </div>
             

@@ -41,7 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
     <RainbowKitProvider chains={chains}>
-      <main className={epilogue.className} >
+      <main className={montserrat.className} >
       <div className='absolute z-2' >
         <Navbar/>
       </div>
