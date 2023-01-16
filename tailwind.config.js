@@ -35,7 +35,7 @@ module.exports = {
       colors: {
         primary: "#4D6DE3",
         secondary: "#C7EEFF",
-        bgcolor:'#F1FCFD'
+        base:'#F1FCFD'
       },
       fontFamily: {
         'sans': ["Michroma","Inter", "sans-serif"],

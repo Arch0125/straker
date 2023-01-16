@@ -1,16 +1,57 @@
 import * as React from 'react';
+import { useSigner } from 'wagmi';
+import GetAccount from '../hooks/GetAccount';
 import GetBalance from '../hooks/GetBalance';
+import GetSF from '../hooks/GetSF';
 
 interface IStakelistProps {
     balance: string;
+    account: string;
 }
 
 const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
 
     const balance = GetBalance();
+    const account = GetAccount();
+
+    const[shares , setShares] = React.useState('0');
+
+    const{data:signer}=useSigner();
+
+    React.useEffect(() => {
+        getShare();
+    }, [account]);
+
+    async function stake(){
+        const sf = await GetSF();
+        console.log(sf);
+
+        const approvedist = sf.idaV1.approveSubscription({
+            indexId:'0',
+            superToken:'0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00',
+            publisher:'0xbf2799D43323aBa53D7936Fa8210804F5d97594F'
+        });
+
+        approvedist?.exec(signer);
+    }
+
+    async function getShare() {
+        const sf = await GetSF();
+
+        const share = await sf?.idaV1?.getSubscription({
+            superToken:'0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00',
+            publisher:'0xbf2799D43323aBa53D7936Fa8210804F5d97594F',
+            indexId:'0',
+            subscriber: account,
+            providerOrSigner: signer
+        })
+
+        console.log(share?.units);
+        setShares(share?.units);
+    }
 
   return(
-    <div className='flex flex-col w-screen h-screen bg-bgcolor items-center justify-center text-black pl-[10%] ' >
+    <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
        <div className="stats stats-vertical lg:stats-horizontal shadow text-primary">
   
             <div className="stat">
@@ -57,8 +98,8 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
             </div>
             
             <div className="stat place-items-left">
-                <div className="stat-title">You receive</div>
-                <div className="stat-value">1.7 fETH</div>
+                <div className="stat-title">Stake Share</div>
+                <div className="stat-value">{shares}</div>
                 <div className="stat-desc">1 ETH = 1 fETH</div>
             </div>
             
@@ -70,9 +111,9 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
                 <label className="input-group ">
                 <span className='bg-primary text-white'>ETH</span>
                     <input type="text" placeholder="0.01" className="input input-bordered border-primary" />
-                    <span className='bg-bgcolor text-primary'><button>MAX</button></span>
+                    <span className='bg-base text-primary'><button>MAX</button></span>
                 </label>
-            <button className="btn btn-wide btn-primary mt-2 w-full">Stake</button>
+            <button onClick={()=>stake()} className="btn btn-wide btn-primary mt-2 w-full">Stake</button>
             </div>
         </div>
     </div>
