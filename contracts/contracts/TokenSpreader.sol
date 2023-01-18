@@ -45,6 +45,7 @@ contract TokenSpreader {
     /// @notice Takes the _amount to be staked from the user adn transfers it to the deployed contract, transfers the user same amount of Liquid Staking tokens as shares
     /// @param _amount of token to be staked
     function stake(uint256 _amount)public{
+        require(_amount>0,"Amount cannot be 0");
         stakingToken.transferFrom(msg.sender, address(this), _amount);
         totakStaked+=_amount;
         balanceOf[msg.sender]+=_amount;
