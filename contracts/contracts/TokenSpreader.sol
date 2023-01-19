@@ -26,7 +26,9 @@ contract TokenSpreader {
 
     uint256 public Stakers;
 
-    uint256 public immutable rewardAmount;
+    uint256 public rewardAmount;
+
+    uint256 public initialAmount;
 
     mapping(address => uint256) public balanceOf;
 
@@ -34,10 +36,17 @@ contract TokenSpreader {
         spreaderToken = _spreaderToken;
         stakingToken = _stakingToken;
         rewardAmount = _rewardAmount;
-        spreaderToken.transferFrom(msg.sender,address(this), rewardAmount + _liquidStakingAmount);
-
+        initialAmount = rewardAmount + _liquidStakingAmount;
+        // fDAIx : 0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00
+        // fDAI : 0x88271d333C72e51516B67f5567c728E702b3eeE8
+        // reward : 100000000000000000000
+        // liquid : 10000000000000000000000
         // Creates the IDA Index through which tokens will be distributed
         _spreaderToken.createIndex(INDEX_ID);
+    }
+
+    function initialTransfer() public {
+        spreaderToken.transferFrom(msg.sender,address(this),initialAmount);
     }
 
     // Staking Operations
