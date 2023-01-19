@@ -3,6 +3,10 @@ import { useSigner } from 'wagmi';
 import GetAccount from '../hooks/GetAccount';
 import GetBalance from '../hooks/GetBalance';
 import GetSF from '../hooks/GetSF';
+import { ethers } from 'ethers';
+import {TokenSpreadABI} from '../ABIs/TokenSpreader.js';
+import {SuperTokenABI} from '../ABIs/SuperTokenABI.js';
+import {ERC20ABI} from '../ABIs/ERC20ABI.js';
 
 interface IStakelistProps {
     balance: string;
@@ -15,40 +19,19 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     const account = GetAccount();
 
     const[shares , setShares] = React.useState('0');
+    const[approved , setApproved] = React.useState(false);
 
     const{data:signer}=useSigner();
 
-    React.useEffect(() => {
-        getShare();
-    }, [account]);
+    const TokenSpreaderContract = new ethers.Contract('0x2BEa233F12B37E19A45cD7218Ea03aF45D732376', TokenSpreadABI, signer || undefined);
+    const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
+    const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
 
-    async function stake(){
-        const sf = await GetSF();
-        console.log(sf);
-
-        const approvedist = sf.idaV1.approveSubscription({
-            indexId:'0',
-            superToken:'0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00',
-            publisher:'0xbf2799D43323aBa53D7936Fa8210804F5d97594F'
-        });
-
-        approvedist?.exec(signer);
-    }
-
-    async function getShare() {
-        const sf = await GetSF();
-
-        const share = await sf?.idaV1?.getSubscription({
-            superToken:'0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00',
-            publisher:'0xbf2799D43323aBa53D7936Fa8210804F5d97594F',
-            indexId:'0',
-            subscriber: account,
-            providerOrSigner: signer
-        })
-
-        console.log(share?.units);
-        setShares(share?.units);
-    }
+    const approveCoins = async () => {
+        await fDAIx.approve(TokenSpreaderContract?.address,"10000000000000000000000000");
+        await fDAI.approve(TokenSpreaderContract?.address,"10000000000000000000000000")
+        setApproved(true);
+    };
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
@@ -113,7 +96,9 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
                     <input type="text" placeholder="0.01" className="input input-bordered border-primary" />
                     <span className='bg-base text-primary'><button>MAX</button></span>
                 </label>
-            <button onClick={()=>stake()} className="btn btn-wide btn-primary mt-2 w-full">Stake</button>
+                {
+                    approved ? <button className="btn btn-wide btn-primary mt-2 w-full">Stake</button> : <button onClick={()=>approveCoins()} className="btn btn-wide btn-primary mt-2 w-full">Approve</button>
+                }
             </div>
         </div>
     </div>
