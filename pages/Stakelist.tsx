@@ -174,8 +174,8 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
                 {
                     approved ?
                     <div className="flex flex-row w-full mt-3 pr-2">
-                    <button onClick={approveCoins} className="btn btn-wide btn-primary mt-2 w-full w-1/2 mr-1">Stake</button>
-                    <button onClick={stake} className="btn btn-wide btn-primary mt-2 w-full w-1/2 ml-1">Unstake</button>
+                    <button onClick={stake} className="btn btn-wide btn-primary mt-2 w-full w-1/2 mr-1">Stake</button>
+                    <button onClick={unstake} className="btn btn-wide btn-primary mt-2 w-full w-1/2 ml-1">Unstake</button>
                     </div>
                  : <button onClick={()=>approveCoins()} className="btn btn-wide btn-primary mt-2 w-full">Approve</button>
                 }
