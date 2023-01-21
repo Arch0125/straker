@@ -102,6 +102,12 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
         setLoading(false);
     }
 
+    const unstake = async () => {
+        setLoading(true);
+        await TokenSpreaderContract.unstake(ethers.utils.parseEther(amount || '0'));
+        setLoading(false);
+    }
+
     React.useEffect(()=>{
         checkApprove();
         stakedCoins();
@@ -166,12 +172,14 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
                     <span className='bg-base text-primary'><button>MAX</button></span>
                 </label>
                 {
-                    approved ? <button onClick={()=>stake()} className="btn btn-wide btn-primary mt-2 w-full">
-                        {
-                            loading ? <div className="spinner"></div> : <span>Stake</span>
-                        }
-                    </button> : <button onClick={()=>approveCoins()} className="btn btn-wide btn-primary mt-2 w-full">Approve</button>
+                    approved ?
+                    <div className="flex flex-row w-full mt-3 pr-2">
+                    <button onClick={approveCoins} className="btn btn-wide btn-primary mt-2 w-full w-1/2 mr-1">Stake</button>
+                    <button onClick={stake} className="btn btn-wide btn-primary mt-2 w-full w-1/2 ml-1">Unstake</button>
+                    </div>
+                 : <button onClick={()=>approveCoins()} className="btn btn-wide btn-primary mt-2 w-full">Approve</button>
                 }
+                
             </div>
         </div>
     </div>

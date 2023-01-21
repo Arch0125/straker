@@ -59,7 +59,7 @@ const Faucet: React.FunctionComponent<IFaucetProps> = (props) => {
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
         <ToastContainer />
     <div className="flex flex-col artboard artboard-horizontal phone-2 bg-white rounded-2xl shadow-lg items-center justify-center">
-        <p className='text-[1.5vmax] font-bold text-primary' >DAIx Faucet</p>
+        <p className='text-[1.5vmax] font-bold text-primary' >fDAI Faucet</p>
         <div className="divider"></div>
         <div className="form-control">
             <label className="label">
@@ -67,7 +67,7 @@ const Faucet: React.FunctionComponent<IFaucetProps> = (props) => {
             </label>
             <label className="input-group">
                 <input type="text" placeholder="0.01" className="input input-bordered border-2 border-base" onChange={(e)=>setAmount(e.target.value)} />
-                <span className='bg-base text-primary' >DAIx</span>
+                <span className='bg-base text-primary' >fDAI</span>
             </label>
             {
                 loading ? <button className='btn btn-primary mt-3 '><progress className="progress w-56 bg-primary"></progress></button> : <button className='btn btn-primary mt-3' onClick={()=>mintdai()}>Get DAIx</button>
