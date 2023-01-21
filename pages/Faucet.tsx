@@ -46,7 +46,7 @@ const Faucet: React.FunctionComponent<IFaucetProps> = (props) => {
     const mintdai = async () => {
         try{
         setLoading(true);
-        await fDAI.mint(ethers.utils.getAddress(address), ethers.utils.parseEther(amount || '0'));
+        await fDAI.mint(ethers.utils.getAddress(address || '0x0'), ethers.utils.parseEther(amount || '0'));
         setLoading(false);
         success();
         }catch(e){
