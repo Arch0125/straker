@@ -139,7 +139,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
         </div>
         <div className="flex flex-col artboard artboard-horizontal bg-white shadow rounded-xl mt-7 phone-3 items-center justify-center p-3">
 
-        <p className='text-[1.5vmax] font-bold text-primary' >Stake ETH</p>
+        <p className='text-[1.5vmax] font-bold text-primary' >Stake DAI</p>
         <div className="divider"></div>
         <div className="stats shadow text-primary">
   
