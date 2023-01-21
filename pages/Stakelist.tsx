@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSigner } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import GetAccount from '../hooks/GetAccount';
 import GetBalance from '../hooks/GetBalance';
 import GetSF from '../hooks/GetSF';
@@ -15,15 +15,25 @@ interface IStakelistProps {
 
 const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
 
+    const{address} = useAccount();
     const balance = GetBalance();
-    const account = GetAccount();
+    const account = address;
 
-    const[shares , setShares] = React.useState('0');
+    const[shares , setShares] = React.useState<string | null>('0');
     const[approved , setApproved] = React.useState(false);
+    const[amount, setAmount] = React.useState<string | null>('0');
+    const[loading, setLoading] = React.useState(false);
+    const[staked, setStaked] = React.useState<string | null>('0');
+    const[stakedamount, setStakedamount] = React.useState<string | null>('0');
+    const[stakers, setStakers] = React.useState<string | null>('0');
+    const[reward, setReward] = React.useState<string | null>('0');
+    const[daibal, setDaibal] = React.useState<string | null>('0');
+    const[daixbal, setDaixbal] = React.useState<string | null>('0');
+    const[stakeshare, setStakeshare] = React.useState<number | null>(0);
 
     const{data:signer}=useSigner();
 
-    const TokenSpreaderContract = new ethers.Contract('0x2BEa233F12B37E19A45cD7218Ea03aF45D732376', TokenSpreadABI, signer || undefined);
+    const TokenSpreaderContract = new ethers.Contract('0x39b0111bc468ca569ca8413cb4C64304Fa89df5F', TokenSpreadABI, signer || undefined);
     const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
     const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
 
@@ -33,32 +43,90 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
         setApproved(true);
     };
 
+    const stakeDetails= async () => {
+
+        const sf = await GetSF();
+        console.log(sf);
+
+        const share = await sf?.idaV1.getSubscription({
+            superToken:fDAIx?.address,
+            publisher:TokenSpreaderContract?.address,
+            subscriber:account || '0x0',
+            indexId:'0',
+            providerOrSigner:signer
+        })
+
+        const units = ethers.utils.formatEther(share?.units);
+        setShares(units);
+
+        const tStaked = await TokenSpreaderContract.totakStaked();
+        const stakers = await TokenSpreaderContract.getStakers();
+        const reward = await TokenSpreaderContract.rewardAmount();
+        const total = ethers.utils.formatEther(tStaked.toString());
+        const daibal = await fDAI.balanceOf(account);
+        const daixbal = await fDAIx.balanceOf(account);
+        console.log(stakers.toString());
+        const rewardamt = ethers.utils.formatEther(reward.toString());
+        const daibalamt = ethers.utils.formatEther(daibal.toString());
+        const daixbalamt = ethers.utils.formatEther(daixbal.toString());
+        setStakers(stakers.toString());
+        setStakedamount(total);
+        setReward(rewardamt);
+        setDaibal(daibalamt);
+        setDaixbal(daixbalamt);
+        setStakeshare((Number(units)/Number(total))*100);
+    }
+
+    const stakedCoins = async () => {
+        const res = await TokenSpreaderContract.balanceOf(ethers.utils.getAddress(account || ''));
+        const val = ethers.utils.formatEther(res?.toString());
+        console.log(val);
+        setStaked(val);
+    }
+
+    const checkApprove =async () => {
+        const res1 = await fDAIx.allowance(account,TokenSpreaderContract?.address);
+        const res2 = await fDAI.allowance(account,TokenSpreaderContract?.address);
+        console.log(res1.toString());
+        if(res1 > 0 && res2 > 0){
+            setApproved(true);
+        }else{
+            setApproved(false);
+        }
+    }
+
+    const stake = async () => {
+        setLoading(true);
+        await TokenSpreaderContract.stake(ethers.utils.parseEther(amount || '0'));
+        setLoading(false);
+    }
+
+    React.useEffect(()=>{
+        checkApprove();
+        stakedCoins();
+        stakeDetails();
+    },[account,balance]);
+
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
        <div className="stats stats-vertical lg:stats-horizontal shadow text-primary">
   
             <div className="stat">
                 <div className="stat-title">Total Stakers</div>
-                <div className="stat-value"></div>
+                <div className="stat-value">{stakers}</div>
                 <div className="stat-desc">Jan 1st - Feb 1st</div>
             </div>
             
             <div className="stat">
                 <div className="stat-title">Staked Amount</div>
-                <div className="stat-value">4,200</div>
-                <div className="stat-desc">↗︎ 400 (22%)</div>
+                <div className="stat-value">{stakedamount}</div>
+                <div className="stat-desc">fDAI</div>
             </div>
             
             <div className="stat">
                 <div className="stat-title">Rewards</div>
-                <div className="stat-value">10%</div>
+                <div className="stat-value">{reward} fDAIx</div>
                 <div className="stat-desc">per month</div>
-            </div>
-
-            <div className="stat">
-                <div className="stat-title">srETHx Marketcap</div>
-                <div className="stat-value">$2.43</div>
-                <div className="stat-desc">Billion</div>
             </div>
             
         </div>
@@ -70,20 +138,20 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
   
             <div className="stat place-items-left">
                 <div className="stat-title">Available to Stake</div>
-                <div className="stat-value">{balance?.slice(0,4)}</div>
-                <div className="stat-desc">fETH</div>
+                <div className="stat-value">{daibal}</div>
+                <div className="stat-desc">fDAI</div>
             </div>
             
             <div className="stat place-items-left">
                 <div className="stat-title">Staked Amount</div>
-                <div className="stat-value ">1.7</div>
-                <div className="stat-desc ">fETH</div>
+                <div className="stat-value ">{staked}</div>
+                <div className="stat-desc ">fDAI</div>
             </div>
             
             <div className="stat place-items-left">
                 <div className="stat-title">Stake Share</div>
-                <div className="stat-value">{shares}</div>
-                <div className="stat-desc">1 ETH = 1 fETH</div>
+                <div className="stat-value">{shares} fDAIx</div>
+                <div className="stat-desc">{stakeshare}% of pool</div>
             </div>
             
         </div>
@@ -92,12 +160,16 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
                     <span className="label-text">Enter amount</span>
                 </label>
                 <label className="input-group ">
-                <span className='bg-primary text-white'>ETH</span>
-                    <input type="text" placeholder="0.01" className="input input-bordered border-primary" />
+                <span className='bg-primary text-white'>DAIx</span>
+                    <input onChange={(e)=>setAmount(e.target.value)} type="text" placeholder="0.01" className="input input-bordered border-primary" />
                     <span className='bg-base text-primary'><button>MAX</button></span>
                 </label>
                 {
-                    approved ? <button className="btn btn-wide btn-primary mt-2 w-full">Stake</button> : <button onClick={()=>approveCoins()} className="btn btn-wide btn-primary mt-2 w-full">Approve</button>
+                    approved ? <button onClick={()=>stake()} className="btn btn-wide btn-primary mt-2 w-full">
+                        {
+                            loading ? <div className="spinner"></div> : <span>Stake</span>
+                        }
+                    </button> : <button onClick={()=>approveCoins()} className="btn btn-wide btn-primary mt-2 w-full">Approve</button>
                 }
             </div>
         </div>
