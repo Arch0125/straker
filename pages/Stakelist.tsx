@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount, useProvider, useSigner } from 'wagmi';
 import GetAccount from '../hooks/GetAccount';
 import GetBalance from '../hooks/GetBalance';
 import GetSF from '../hooks/GetSF';
@@ -32,6 +32,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     const[stakeshare, setStakeshare] = React.useState<number | null>(0);
 
     const{data:signer}=useSigner();
+    const provider = useProvider();
 
     const TokenSpreaderContract = new ethers.Contract('0x39b0111bc468ca569ca8413cb4C64304Fa89df5F', TokenSpreadABI, signer || undefined);
     const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
@@ -53,7 +54,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
             publisher:TokenSpreaderContract?.address,
             subscriber:account || '0x0',
             indexId:'0',
-            providerOrSigner:signer
+            providerOrSigner:signer || provider
         })
 
         const units = ethers.utils.formatEther(share?.units);
@@ -105,7 +106,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
         checkApprove();
         stakedCoins();
         stakeDetails();
-    },[account,balance]);
+    });
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
