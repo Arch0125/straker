@@ -35,7 +35,7 @@ const Sidemenu: React.FunctionComponent<ISidemenuProps> = (props) => {
   return(
     <div>
         <ul className="menu bg-base border-2 border-primary text-secondary w-56 p-2 rounded-box  ">
-            <li className='text-primary' onClick={(e)=>switchPage("stream")} ><a className={` ${streampage === true ? "text-secondary active":"text-primary"} `}>Wrap/Unwrap</a></li>
+            <Link href={'/Wrap'}><li className='text-primary' onClick={(e)=>switchPage("stream")} ><a className={` ${streampage === true ? "text-secondary active":"text-primary"} `}>Wrap/Unwrap</a></li></Link>
             <Link href={'/Stakelist'} ><li onClick={(e)=>switchPage("stake")}><a className={` ${stakepage === true ? "text-secondary active":"text-primary"} `}>Stake</a></li></Link>
             <Link href={'/Faucet'} ><li onClick={(e)=>switchPage("faucet")}><a className={` ${faucetpage === true ? "text-secondary active":"text-primary"} `}>Faucet</a></li></Link>
         </ul>

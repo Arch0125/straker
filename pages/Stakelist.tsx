@@ -97,6 +97,13 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     }
 
     const stake = async () => {
+        const sf = await GetSF();
+        const apv = await sf.idaV1.approveSubscription({
+            indexId:'0',
+            superToken:fDAIx?.address,
+            publisher:TokenSpreaderContract?.address,
+        });
+        apv.exec(signer!);
         setLoading(true);
         await TokenSpreaderContract.stake(ethers.utils.parseEther(amount || '0'));
         setLoading(false);
