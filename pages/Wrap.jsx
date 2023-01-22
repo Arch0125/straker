@@ -2,29 +2,41 @@ import * as React from 'react';
 import { ethers } from 'ethers';
 import GetSF from '../hooks/GetSF';
 import { useAccount, useSigner } from 'wagmi';
+import { ERC20Token } from '@superfluid-finance/sdk-core';
 
-interface IWrapProps {
-}
 
-const Wrap: React.FunctionComponent<IWrapProps> = (props) => {
+const Wrap = (props) => {
 
-    const[amount, setAmount] = React.useState<string | null>('0');
+    const[amount, setAmount] = React.useState('0');
 
     const {data:signer} = useSigner();
     const{address}=useAccount();
 
     const upgrade = async () => {
         const sf= await GetSF();
-        const daix = await sf.loadSuperToken("0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00");
-        const approve =  daix.approve({
-            receiver: address || '0x0',
-            amount: amount || '0'
+        const fdaix = await sf.loadSuperToken("0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00");
+        const fdai = fdaix?.underlyingToken;
+        const approve =  fdai.approve({
+            receiver: fdaix.address || '0x0',
+            amount: ethers.utils.parseEther(amount)
         });
-        const apv = await approve.exec(signer!);
-        apv.wait();
-        const op =  daix.upgrade({ amount: amount || '0' });
+        const apv = await approve.exec(signer);
+        await apv.wait();
+        const op =  fdaix.upgrade({ amount: ethers.utils.parseEther(amount) });
         const res = op.exec(signer);
-        await res.wait();
+    }
+
+    const downgrade = async () => {
+        const sf= await GetSF();
+        const fdaix = await sf.loadSuperToken("0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00");
+        const approve =  fdaix.approve({
+            receiver: fdaix.address || '0x0',
+            amount: ethers.utils.parseEther(amount)
+        });
+        const apv = await approve.exec(signer);
+        await apv.wait();
+        const op =  fdaix.downgrade({ amount: ethers.utils.parseEther(amount)});
+        const res = op.exec(signer);
     }
 
   return(
@@ -41,7 +53,7 @@ const Wrap: React.FunctionComponent<IWrapProps> = (props) => {
                 </label>
                 <div className="flex flex-row w-full mt-3 pr-2">
                     <button onClick={upgrade} className="btn btn-wide btn-primary mt-2 w-full w-1/2 mr-1">to fDAIx</button>
-                    <button className="btn btn-wide btn-primary mt-2 w-full w-1/2 ml-1">to fDAI</button>
+                    <button onClick={downgrade} className="btn btn-wide btn-primary mt-2 w-full w-1/2 ml-1">to fDAI</button>
                     </div>
             </div>
         </div>
