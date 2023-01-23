@@ -51,7 +51,7 @@ const Notifs = (props) => {
                 notifs.map((notif)=>{
                     if(notif.app === 'Straker'){
                         return(
-                            <div className='flex flex-col p-2 m-2 border-[1px] border-primary rounded-xl' >
+                            <div key={notif.id} className='flex flex-col p-2 m-2 border-[1px] border-primary rounded-xl' >
                                 <p className='text-[1vmax] font-bold text-primary'>{notif.title}</p>
                                 <p className='text-[0.8vmax] font-thin text-black'>{notif.message}</p>
                             </div>
