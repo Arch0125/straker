@@ -152,7 +152,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
   
             <div className="stat place-items-left">
                 <div className="stat-title">Available to Stake</div>
-                <div className="stat-value">{daibal}</div>
+                <div className="stat-value">{Number(daibal).toFixed(2)}</div>
                 <div className="stat-desc">fDAI</div>
             </div>
             
