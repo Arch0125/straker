@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "contracts/hardhat.config.js", "pages/Wrap.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "contracts/hardhat.config.js", "pages/Wrap.jsx", "pages/Notifs.jsx"],
   "exclude": ["node_modules"]
 }
