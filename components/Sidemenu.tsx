@@ -9,21 +9,31 @@ const Sidemenu: React.FunctionComponent<ISidemenuProps> = (props) => {
   const[streampage, setStreampage] = React.useState(false);
   const[stakepage, setStakepage] = React.useState(true);
   const[faucetpage, setFaucetpage] = React.useState(false);
+  const[notifpage, setNotifpage] = React.useState(false);
 
   const switchPage = (page: string) => {
     if(page === 'stream'){
       setStreampage(true);
       setStakepage(false);
       setFaucetpage(false);
+      setNotifpage(false);
     } else if(page === 'stake'){
       setStreampage(false);
       setStakepage(true);
       setFaucetpage(false);
+      setNotifpage(false);
     }
     else if(page === 'faucet'){
       setStreampage(false);
       setStakepage(false);
       setFaucetpage(true);
+      setNotifpage(false);
+    }
+    else if(page === 'notif'){
+      setStreampage(false);
+      setStakepage(false);
+      setFaucetpage(false);
+      setNotifpage(true);
     }
   };
 
@@ -38,6 +48,7 @@ const Sidemenu: React.FunctionComponent<ISidemenuProps> = (props) => {
             <Link href={'/Wrap'}><li className='text-primary' onClick={(e)=>switchPage("stream")} ><a className={` ${streampage === true ? "text-secondary active":"text-primary"} `}>Wrap/Unwrap</a></li></Link>
             <Link href={'/Stakelist'} ><li onClick={(e)=>switchPage("stake")}><a className={` ${stakepage === true ? "text-secondary active":"text-primary"} `}>Stake</a></li></Link>
             <Link href={'/Faucet'} ><li onClick={(e)=>switchPage("faucet")}><a className={` ${faucetpage === true ? "text-secondary active":"text-primary"} `}>Faucet</a></li></Link>
+            <Link href={'/Notifs'} ><li onClick={(e)=>switchPage("notif")}><a className={` ${notifpage === true ? "text-secondary active":"text-primary"} `}>Notifications</a></li></Link>
         </ul>
     </div>
   );

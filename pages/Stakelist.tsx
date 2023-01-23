@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import {TokenSpreadABI} from '../ABIs/TokenSpreader.js';
 import {SuperTokenABI} from '../ABIs/SuperTokenABI.js';
 import {ERC20ABI} from '../ABIs/ERC20ABI.js';
+import * as PushAPI from "@pushprotocol/restapi";
 
 interface IStakelistProps {
     balance: string;
@@ -37,6 +38,8 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     const TokenSpreaderContract = new ethers.Contract('0x39b0111bc468ca569ca8413cb4C64304Fa89df5F', TokenSpreadABI, signer || undefined);
     const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
     const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
+
+    console.log(TokenSpreaderContract);
 
     const approveCoins = async () => {
         await fDAIx.approve(TokenSpreaderContract?.address,"10000000000000000000000000");
@@ -115,6 +118,33 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
         setLoading(false);
     }
 
+    const sendNotif = async () => {
+        const apiResponse = await PushAPI.payloads.sendNotification({
+            signer,
+            type: 1, 
+            identityType: 0, 
+            notification: {
+              title: `Reward distribution alert`,
+              body: `Your staking rewards have been transferred to your account`
+            },
+            payload: {
+              title: `[sdk-test] payload title`,
+              body: `sample msg body`,
+              cta: '',
+              img: ''
+            },
+            channel: 'eip155:5:0xEdEFD55a9674550669Bdfe304f8d5c725b0817dF', // your channel address
+            env: 'staging'
+          });
+
+          console.log(apiResponse);
+    }
+
+    const distributeReward = async () => {
+        TokenSpreaderContract.distribute();
+        sendNotif();
+    }
+
     React.useEffect(()=>{
         checkApprove();
         stakedCoins();
@@ -189,6 +219,13 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
                 
             </div>
         </div>
+        {
+            address === '0xEdEFD55a9674550669Bdfe304f8d5c725b0817dF' ?
+            (
+                <button onClick={distributeReward} className="btn btn-wide btn-primary mt-6 w-fit">Distribute</button>
+            ):null
+        }
+                
     </div>
   );
 };

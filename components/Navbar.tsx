@@ -11,6 +11,7 @@ const Navbar: React.FunctionComponent<INavbarProps> = (props) => {
         <Link href='/' className='text-[1.5vmax] font-bold'>Straker</Link>
         <div className='flex flex-row ' >
         <ConnectButton />
+        
         </div>
     </div>
   ) ;
