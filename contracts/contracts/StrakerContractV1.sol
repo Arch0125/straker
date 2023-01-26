@@ -1,5 +1,5 @@
 //SPDX-License-Identifier:MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.14;
 
 
 import {
@@ -27,6 +27,10 @@ contract StrakerContractV1 {
     }
 
     uint256 rewardrate = 4;
+
+    mapping(address => uint256) public stakedAmount;
+
+    uint256 public totalStaked;
 
     function initialDeposit(uint256 _deposit) public {
         strakertoken.transferFrom(msg.sender,address(this),_deposit);
@@ -62,10 +66,26 @@ contract StrakerContractV1 {
     }
 
     function stake(uint256 _stakingAmount) public {
+        require(_stakingAmount <= stakingtoken.balanceOf(msg.sender),"Staking amount more than balance");
         stakingtoken.transferFrom(msg.sender,address(this),_stakingAmount);
-        int256 rate = int256(rewardrate * _stakingAmount)/(100 * 31536000);
+        stakedAmount[msg.sender]+=_stakingAmount;
+        totalStaked+=_stakingAmount;
+        int256 rate = int256(rewardrate * stakedAmount[msg.sender])/(100 * 31536000);
         int96 flowrate = int96(rate) ;
         createFlowFromContract(msg.sender, flowrate);
     }
+
+    function unstake(uint256 _unstakingAmount) public {
+        require(_unstakingAmount <= stakedAmount[msg.sender], "Amount cannot be greater than staked amount");
+        require(_unstakingAmount <= totalStaked, "Amount cannot be greatter than total staked tokens");
+        stakingtoken.transferFrom(address(this),msg.sender,_unstakingAmount);
+        stakedAmount[msg.sender]-=_unstakingAmount;
+        totalStaked-=_unstakingAmount;
+        int256 rate = int256(rewardrate * stakedAmount[msg.sender])/(100 * 31536000);
+        int96 flowrate = int96(rate) ;
+        updateFlowFromContract(msg.sender, flowrate);
+
+    }
+
 
 }
