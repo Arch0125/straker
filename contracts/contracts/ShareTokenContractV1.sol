@@ -9,9 +9,11 @@ import {
 
 import { SuperTokenV1Library } from "@superfluid-finance/ethereum-contracts/contracts/apps/SuperTokenV1Library.sol";
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IERC20.sol";
 
-contract ShareToken is IERC20 {
+import "./IShareToken.sol";
+
+contract ShareToken is IShareToken {
 
     using SuperTokenV1Library for ISuperToken;
     ISuperToken public strakertoken;
@@ -26,9 +28,9 @@ contract ShareToken is IERC20 {
         stakingcontract = _stakingaddr;
     }
   
-    uint public totalSupply;
-    mapping(address => uint) public balanceOf;
-    mapping(address => mapping(address => uint)) public allowance;
+    uint256 public totalSupply;
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
     string public name = "Straker staked DAI";
     string public symbol = "strDAI";
     uint8 public decimals = 18;
@@ -41,7 +43,7 @@ contract ShareToken is IERC20 {
         }
     }
 
-    function transfer(address recipient, uint amount) external returns (bool) {
+    function transfer(address recipient, uint256 amount) external returns (bool) {
         balanceOf[msg.sender] -= amount;
         balanceOf[recipient] += amount;
         int256 rate = int256(rewardrate * balanceOf[msg.sender])/(100 * 31536000);
@@ -52,7 +54,7 @@ contract ShareToken is IERC20 {
         return true;
     }
 
-    function approve(address spender, uint amount) external returns (bool) {
+    function approve(address spender, uint256 amount) external returns (bool) {
         allowance[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
@@ -61,7 +63,7 @@ contract ShareToken is IERC20 {
     function transferFrom(
         address sender,
         address recipient,
-        uint amount
+        uint256 amount
     ) external returns (bool) {
         allowance[sender][msg.sender] -= amount;
         balanceOf[sender] -= amount;
@@ -74,21 +76,23 @@ contract ShareToken is IERC20 {
         return true;
     }
 
-    function mint(uint amount) external {
-        balanceOf[msg.sender] += amount;
+    function mint(uint256 amount, address recipient) external returns (bool) {
+        balanceOf[recipient] += amount;
         totalSupply += amount;
         int256 rate = int256(rewardrate * balanceOf[msg.sender])/(100 * 31536000);
         int96 flowrate = int96(rate) ;
         updateStream(msg.sender,flowrate);
         emit Transfer(address(0), msg.sender, amount);
+        return(true);
     }
 
-    function burn(uint amount) external {
-        balanceOf[msg.sender] -= amount;
+    function burn(uint256 amount, address owner) external returns(bool) {
+        balanceOf[owner] -= amount;
         totalSupply -= amount;
-        int256 rate = int256(rewardrate * balanceOf[msg.sender])/(100 * 31536000);
+        int256 rate = int256(rewardrate * balanceOf[owner])/(100 * 31536000);
         int96 flowrate = int96(rate) ;
-        updateStream(msg.sender,flowrate);
-        emit Transfer(msg.sender, address(0), amount);
+        updateStream(owner,flowrate);
+        emit Transfer(owner, address(0), amount);
+        return(true);
     }
 }
