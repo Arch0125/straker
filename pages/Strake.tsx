@@ -71,7 +71,11 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
         const daixbal = await fDAIx.balanceOf(address);
         setDaixbal(ethers.utils.formatEther(daixbal));
 
+        setTimeout(stakedetails, 3000);
+
     }
+
+    stakedetails();
 
     const approveCoins = async () => {
         await fDAIx.approve(StrakerContractV2?.address,"10000000000000000000000000");
@@ -114,10 +118,6 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
 
           console.log(apiResponse);
     }
-
-    React.useEffect(()=>{
-        stakedetails();
-    },[])
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
