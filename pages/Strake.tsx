@@ -117,7 +117,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
 
     React.useEffect(()=>{
         stakedetails();
-    },[address])
+    },[])
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
