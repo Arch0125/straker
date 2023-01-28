@@ -33,6 +33,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const[daibal, setDaibal] = React.useState<string | null>('0');
     const[daixbal, setDaixbal] = React.useState<string | null>('0');
     const[stakeshare, setStakeshare] = React.useState<number | null>(0);
+    const[flowrate, setFlowrate] = React.useState<number | null>(0);
 
     const{data:signer}=useSigner();
     const provider = useProvider();
@@ -43,6 +44,34 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const strDAI = new ethers.Contract('0xA3cd6a422aEcbD97Fa3B031AdA784040885aB6aA', ShareTokenABI, signer || undefined);
 
     console.log(StrakerContractV2);
+
+    const stakedetails=async()=>{
+
+        const sf = await GetSF();
+
+        const fdaix = await sf.loadSuperToken('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00');
+        console.log(fdaix);
+
+        const realtimebal = await fdaix.getFlow({
+            sender: StrakerContractV2?.address,
+            receiver: address || "0x0",
+            providerOrSigner: provider || signer
+        })
+
+        const flowrate = Number(ethers.utils.formatEther(realtimebal?.flowRate))*2592022.6801;
+        setFlowrate(flowrate);
+        
+
+        const totalstaked = await StrakerContractV2.totalStaked();
+        setStakedamount(ethers.utils.formatEther(totalstaked));
+        const addrstaked = await StrakerContractV2.stakedAmount(address);
+        setStaked(ethers.utils.formatEther(addrstaked));
+        const daibal = await fDAI.balanceOf(address);
+        setDaibal(ethers.utils.formatEther(daibal));
+        const daixbal = await fDAIx.balanceOf(address);
+        setDaixbal(ethers.utils.formatEther(daixbal));
+
+    }
 
     const approveCoins = async () => {
         await fDAIx.approve(StrakerContractV2?.address,"10000000000000000000000000");
@@ -85,6 +114,10 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
 
           console.log(apiResponse);
     }
+
+    React.useEffect(()=>{
+        stakedetails();
+    },[address])
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
@@ -129,8 +162,8 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
             
             <div className="stat place-items-left">
                 <div className="stat-title">Realtime Rewards</div>
-                <div className="stat-value">{shares} fDAIx</div>
-                <div className="stat-desc">{stakeshare}% of pool</div>
+                <div className="stat-value">{Number(daixbal)?.toFixed(2)} fDAIx</div>
+                <div className="stat-desc">{flowrate?.toFixed(4)}/month</div>
             </div>
             
         </div>
