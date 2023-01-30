@@ -10,6 +10,7 @@ import {ERC20ABI} from '../ABIs/ERC20ABI.js';
 import * as PushAPI from "@pushprotocol/restapi";
 import {StrakerContractABI} from '../ABIs/StrakerContractV2.js';
 import {ShareTokenABI} from '../ABIs/ShareToken.js';
+import {ShareTokenV2ABI} from '../ABIs/ShareTokenV2';
 
 interface IStrakeProps {
     balance: string;
@@ -38,10 +39,10 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const{data:signer}=useSigner();
     const provider = useProvider();
 
-    const StrakerContractV2 = new ethers.Contract('0x80eb389A1E85689180C8812E83A248c14d15fbFc', StrakerContractABI, signer || undefined);
+    const StrakerContractV2 = new ethers.Contract('0xA3Aaa8c59F74088203c5917D11fF3C6aF06BDEf3', StrakerContractABI, signer || undefined);
     const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
     const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
-    const strDAI = new ethers.Contract('0xA3cd6a422aEcbD97Fa3B031AdA784040885aB6aA', ShareTokenABI, signer || undefined);
+    const strDAI = new ethers.Contract('0xFFaA1C8Abe9BAC84C3D0e3bBcbF9Af207CC4B352', ShareTokenABI, signer || undefined);
 
     console.log(StrakerContractV2);
 
