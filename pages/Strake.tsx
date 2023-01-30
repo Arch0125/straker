@@ -42,7 +42,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const StrakerContractV2 = new ethers.Contract('0xA3Aaa8c59F74088203c5917D11fF3C6aF06BDEf3', StrakerContractABI, signer || undefined);
     const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
     const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
-    const strDAI = new ethers.Contract('0xFFaA1C8Abe9BAC84C3D0e3bBcbF9Af207CC4B352', ShareTokenABI, signer || undefined);
+    const strDAI = new ethers.Contract('0xFFaA1C8Abe9BAC84C3D0e3bBcbF9Af207CC4B352', ShareTokenV2ABI, signer || undefined);
 
     console.log(StrakerContractV2);
 
