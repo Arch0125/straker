@@ -86,6 +86,17 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
         setApproved(true);
     };
 
+    const checkApprove =async () => {
+        const res1 = await fDAIx.allowance(account,StrakerContractV2?.address);
+        const res2 = await fDAI.allowance(account,StrakerContractV2?.address);
+        console.log(res1.toString());
+        if(res1 > 0 && res2 > 0){
+            setApproved(true);
+        }else{
+            setApproved(false);
+        }
+    }
+
     const stake = async () => {
         setLoading(true);
         await StrakerContractV2.stake(ethers.utils.parseEther(amount || '0'));
@@ -96,7 +107,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const unstake = async () => {
         setLoading(true);
         await StrakerContractV2.unstake(ethers.utils.parseEther(amount || '0'));
-        await strDAI.burn(ethers.utils.parseEther(amount || '0'), address);
+        //await strDAI.burn(ethers.utils.parseEther(amount || '0'), address);
         setLoading(false);
     }
 
@@ -121,6 +132,10 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
 
           console.log(apiResponse);
     }
+
+    React.useEffect(()=>{
+        checkApprove();
+    },[])
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
