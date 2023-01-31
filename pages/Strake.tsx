@@ -94,6 +94,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const unstake = async () => {
         setLoading(true);
         await StrakerContractV2.unstake(ethers.utils.parseEther(amount || '0'));
+        await strDAI.approve(StrakerContractV2?.address, ethers.utils.parseEther(amount || '0'));
         await strDAI.burn(ethers.utils.parseEther(amount || '0'), address);
         setLoading(false);
     }
