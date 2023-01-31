@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Straker
 
-First, run the development server:
+A Liquid Staking Derivative powered by Superfluid Streams, enabling auto-claimable gasless staking rewards and real-time staking rewards in form of streams directly to your wallet
 
-```bash
-npm run dev
-# or
-yarn dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Steps to stake
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+This project has the following staking options:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- **IDA Staking** : where the user just have to stake tokens and gets the share token, where shares are maintained by the IDA contracts as well, after the redeemable date, the contract automatically distributed the reward to the stakers to their wallet without interacting with the platform, hence it gets auto-claimed
+- **CFA Staking** : Here the when the user stakes the token, the user gets LSD token in 1:1 ratio which can be traded in the secondary markets for same value, also this token manages the stream of reward token for the token holder. Hence even outside the platform, normal transaction with the lsd-tokens will affect the reward stream and update the stream for the new holder as well. For unstaking its similar, the flowrate gets modified or deleted based on the tokens unstaked and the lsd-tokens are burnt.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## IDA Staking
 
-To learn more about Next.js, take a look at the following resources:
+- Get some fDAI from the faucet
+- Click on Stake option from the sidebar
+- Approve fDAI and fDAIx spending 
+- Enter amount and stake fDAI
+- After successful staking, the interface will show the amount staked and the amount of share held in the pool
+- Wait till the end of reward period, the distribute will be called by the staking contract and the rewards are distributed directly to wallets
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## CFA Liquid Staking
+- In this case process is same till staking fDAI
+- After staking, strDAI will be minted to the address in 1:1 ratio which could be traded in secondary market
+- Also the reward token (fDAIx) will start to strea directly to the address
+- Transfer of strDAI manages the flow rate of reward tokens and also the shares in the staking pool.
+- Transferring strDAI to an address which has not staked will start receiving rewards as well in proportion and will be given shares
+- Unstaking happens when the staker burns strDAI tokens and gets equal amount of fDAI unlocked 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Network 
+- Goerli
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
