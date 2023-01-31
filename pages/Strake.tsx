@@ -173,7 +173,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
                     <span className="label-text">Enter amount</span>
                 </label>
                 <label className="input-group ">
-                <span className='bg-primary text-white'>DAIx</span>
+                <span className='bg-primary text-white'>fDAI</span>
                     <input onChange={(e)=>setAmount(e.target.value)} type="text" placeholder="0.01" className="input input-bordered border-primary" />
                     <span className='bg-base text-primary'><button>MAX</button></span>
                 </label>
