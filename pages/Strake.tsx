@@ -106,8 +106,8 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
 
     const unstake = async () => {
         setLoading(true);
+        await strDAI.burn(ethers.utils.parseEther(amount || '0'), address);
         await StrakerContractV2.unstake(ethers.utils.parseEther(amount || '0'));
-        //await strDAI.burn(ethers.utils.parseEther(amount || '0'), address);
         setLoading(false);
     }
 
@@ -135,7 +135,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
 
     React.useEffect(()=>{
         checkApprove();
-    },[])
+    })
 
   return(
     <div className='flex flex-col w-screen h-screen bg-base items-center justify-center text-black pl-[10%] ' >
