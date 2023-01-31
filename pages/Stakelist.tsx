@@ -114,7 +114,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
 
     const unstake = async () => {
         setLoading(true);
-        await TokenSpreaderContract.unstake(ethers.utils.parseEther(amount || '0'));
+        await TokenSpreaderContract.unStake(ethers.utils.parseEther(amount || '0'));
         setLoading(false);
     }
 
