@@ -39,7 +39,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     const fDAIx = new ethers.Contract('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00', ERC20ABI, signer || undefined);
     const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
 
-    console.log(TokenSpreaderContract);
+    // console(TokenSpreaderContract);
 
     const approveCoins = async () => {
         await fDAIx.approve(TokenSpreaderContract?.address,"10000000000000000000000000");
@@ -50,7 +50,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     const stakeDetails= async () => {
 
         const sf = await GetSF();
-        console.log(sf);
+        // console(sf);
 
         const share = await sf?.idaV1.getSubscription({
             superToken:fDAIx?.address,
@@ -69,7 +69,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
         const total = ethers.utils.formatEther(tStaked.toString());
         const daibal = await fDAI.balanceOf(account);
         const daixbal = await fDAIx.balanceOf(account);
-        console.log(stakers.toString());
+        // console(stakers.toString());
         const rewardamt = ethers.utils.formatEther(reward.toString());
         const daibalamt = ethers.utils.formatEther(daibal.toString());
         const daixbalamt = ethers.utils.formatEther(daixbal.toString());
@@ -84,14 +84,14 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
     const stakedCoins = async () => {
         const res = await TokenSpreaderContract.balanceOf(ethers.utils.getAddress(account || ''));
         const val = ethers.utils.formatEther(res?.toString());
-        console.log(val);
+        // console(val);
         setStaked(val);
     }
 
     const checkApprove =async () => {
         const res1 = await fDAIx.allowance(account,TokenSpreaderContract?.address);
         const res2 = await fDAI.allowance(account,TokenSpreaderContract?.address);
-        console.log(res1.toString());
+        // console(res1.toString());
         if(res1 > 0 && res2 > 0){
             setApproved(true);
         }else{
@@ -137,7 +137,7 @@ const Stakelist: React.FunctionComponent<IStakelistProps> = (props) => {
             env: 'staging'
           });
 
-          console.log(apiResponse);
+          // console(apiResponse);
     }
 
     const distributeReward = async () => {

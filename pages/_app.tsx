@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 const { chains, provider } = configureChains(
   [polygonMumbai,goerli,polygon,mainnet],
   [
+    alchemyProvider({apiKey:'gh4d1-dAT4B_1Khy86s7JUbFhQIclYqO'}),
     publicProvider()
   ]
 );

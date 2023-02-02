@@ -35,6 +35,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const[daixbal, setDaixbal] = React.useState<string | null>('0');
     const[stakeshare, setStakeshare] = React.useState<number | null>(0);
     const[flowrate, setFlowrate] = React.useState<number | null>(0);
+    const[strdaibal, setStrdaibal] = React.useState<string | null>('0');
 
     const{data:signer}=useSigner();
     const provider = useProvider();
@@ -44,14 +45,14 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const fDAI = new ethers.Contract('0x88271d333C72e51516B67f5567c728E702b3eeE8', ERC20ABI, signer || undefined);
     const strDAI = new ethers.Contract('0xAA3EBaB703D9d44F3A39C9439Ca27C01adb857d9', ShareTokenV2ABI, signer || undefined);
 
-    console.log(StrakerContractV2);
+    // console(StrakerContractV2);
 
     const stakedetails=async()=>{
 
         const sf = await GetSF();
 
         const fdaix = await sf.loadSuperToken('0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00');
-        console.log(fdaix);
+        // console(fdaix);
 
         const realtimebal = await fdaix.getFlow({
             sender: StrakerContractV2?.address,
@@ -71,6 +72,8 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
         setDaibal(ethers.utils.formatEther(daibal));
         const daixbal = await fDAIx.balanceOf(address);
         setDaixbal(ethers.utils.formatEther(daixbal));
+        const strdaibal = await strDAI.balanceOf(address);
+        setStrdaibal(ethers.utils.formatEther(strdaibal));
 
         setTimeout(stakedetails, 3000);
 
@@ -89,7 +92,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
     const checkApprove =async () => {
         const res1 = await fDAIx.allowance(account,StrakerContractV2?.address);
         const res2 = await fDAI.allowance(account,StrakerContractV2?.address);
-        console.log(res1.toString());
+        // console(res1.toString());
         if(res1 > 0 && res2 > 0){
             setApproved(true);
         }else{
@@ -130,7 +133,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
             env: 'staging'
           });
 
-          console.log(apiResponse);
+          // console(apiResponse);
     }
 
     React.useEffect(()=>{
@@ -175,7 +178,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
             <div className="stat place-items-left">
                 <div className="stat-title">Staked Amount</div>
                 <div className="stat-value ">{staked}</div>
-                <div className="stat-desc ">fDAI</div>
+                <div className="stat-desc ">fDAI || {Number(strdaibal).toFixed(2)} strDAI</div>
             </div>
             
             <div className="stat place-items-left">
@@ -183,7 +186,7 @@ const Strake: React.FunctionComponent<IStrakeProps> = (props) => {
                 <div className="stat-value">{Number(daixbal)?.toFixed(2)} fDAIx</div>
                 <div className="stat-desc">{flowrate?.toFixed(4)}/month</div>
             </div>
-            
+
         </div>
             <div className="form-control mt-3">
                 <label className="label">

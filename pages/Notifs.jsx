@@ -15,7 +15,7 @@ const Notifs = (props) => {
             channelAddress: 'eip155:5:0xEdEFD55a9674550669Bdfe304f8d5c725b0817dF', // channel address in CAIP
             userAddress: `eip155:5:${address}`, // user address in CAIP
             onSuccess: () => {
-             console.log('opt in success');
+             // console('opt in success');
             },
             onError: () => {
               console.error('opt in error');
@@ -31,7 +31,7 @@ const Notifs = (props) => {
           });
 
         setNotifs(notifications);
-        console.log(notifications);
+        // console(notifications);
     }
 
     React.useEffect(()=>{

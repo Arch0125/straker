@@ -30,7 +30,7 @@ async function main() {
 
     await tokenSpreader.deployed()
 
-    console.log("Token Spreader deployed to:", tokenSpreader.address)
+    // console("Token Spreader deployed to:", tokenSpreader.address)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

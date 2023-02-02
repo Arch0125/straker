@@ -1,7 +1,7 @@
 const { Framework } = require("@superfluid-finance/sdk-core");
 const { ethers } = require("hardhat");
 
-console.log("Hello");
+// console("Hello");
 
 async function main (){
     require("dotenv").config()
@@ -15,7 +15,7 @@ async function main (){
         dataMode:"WEB3_ONLY"
     });
     
-    console.log(sf.settings.config.hostAddress);
+    // console(sf.settings.config.hostAddress);
 }
 
 main();
